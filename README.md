@@ -1,7 +1,7 @@
 # ValutoPy
 ValutoPy is the original Valuto desktop wallet. Written by We8Punk for use with the Valuto blockchain software. It should however, with few modifications work with most bitcoin derived cores.
 
-NB... This repo contains highly experimental code. Do NOT use this in a production environment with real values involved. Use the installer linked on the official website(s) instead.
+NB... This repo contains highly experimental code. Do NOT use this in a production environment where real assets are in jeopardy. Use the installer linked on the official website(s) instead.
 
 # Fire and thunder there will be, if we only had a match!
 
