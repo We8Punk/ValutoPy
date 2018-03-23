@@ -1,0 +1,402 @@
+#:import MDBottomNavigation kivymd.tabs.MDBottomNavigation
+#:import MDBottomNavigationItem kivymd.tabs.MDBottomNavigationItem
+#:import MDTextField kivymd.textfields.MDTextField
+#:import Toolbar kivymd.toolbar.Toolbar
+#:import ThemeManager kivymd.theming.ThemeManager
+#:import MDNavigationDrawer kivymd.navigationdrawer.MDNavigationDrawer
+#:import NavigationLayout kivymd.navigationdrawer.NavigationLayout
+#:import NavigationDrawerDivider kivymd.navigationdrawer.NavigationDrawerDivider
+#:import NavigationDrawerToolbar kivymd.navigationdrawer.NavigationDrawerToolbar
+#:import NavigationDrawerSubheader kivymd.navigationdrawer.NavigationDrawerSubheader
+#:import Clipboard kivy.core.clipboard.Clipboard
+#:import MDSeparator kivymd.card.MDSeparator
+#:import MDSpinner kivymd.spinner.MDSpinner
+#:import Snip pyperclip
+
+NavigationLayout:
+    id: nav_layout
+    MDNavigationDrawer:
+        id: nav_drawer
+        NavigationDrawerToolbar:
+            title: 'About ValutoWallet'
+        NavigationDrawerIconButton:
+            text: 'Main'
+            on_release: app.root.ids.scr_mngr.current = 'main_screen'
+    FloatLayout:
+
+                     
+        BoxLayout:
+            orientation: 'vertical'
+            Toolbar:
+                id: maintoolbar
+                title: 'Valuto Wallet | ' + app.network_manager.balance
+                md_bg_color: get_color_from_hex('#313A4B')
+                #right_action_items: [['dots-vertical', lambda x: app.root.toggle_nav_drawer()]]
+
+            ScreenManager:
+                id: scr_mngr
+                Screen:
+                    name: 'main'
+                    
+                    MDTabbedPanel:
+                        id: main_nav
+                        
+                        MDTab:
+                            name: 'info'
+                            text: 'Account info'
+                            icon: 'information'  
+                             
+                            ScrollView:
+                                do_scroll_x: False
+
+                                BoxLayout:              
+                                    size_hint_y: None
+                                    height: dp(600)           
+                                    orientation: 'vertical'  
+                                    Toolbar:
+                                        md_bg_color: get_color_from_hex('#222222')
+                                        background_palette: 'BlueGrey'
+                                        background_hue: 'A400'
+                                        font_style: 'Body1'
+                                        theme_text_color: 'Primary'
+                                        title: 'Account information'
+                                                                          
+                                    MDList:
+                                        OneLineIconListItem:
+                                            opposite_colors: True
+                                            text: 'My balance: ' + app.network_manager.balance
+                                            IconLeftInfoWidget:
+                                                id: li_icon_1
+                                                icon: 'cash-multiple'
+
+                                        OneLineIconListItem:
+                                            opposite_colors: True
+                                            text: 'Unconfirmed: ' + app.network_manager.unconfirmedbalance
+                                            IconLeftInfoWidget:
+                                                id: li_icon_1
+                                                icon: 'cash-multiple'
+                                                        
+                                        OneLineIconListItem:
+                                            on_release:
+                                                Snip.copy(str(app.network_manager.myaddress))
+                                                app.network_manager.copyaction(app.network_manager.myaddress)
+                                                
+                                            opposite_colors: True
+                                            text: 'Receiving address: ' + app.network_manager.myaddress
+                                            IconLeftInfoWidget:
+                                                id: li_icon_1
+                                                icon: 'pound-box'   
+                                        
+                                        OneLineIconListItem:
+                                            opposite_colors: True
+                                            text: 'Fee: ' + app.network_manager.txfee
+                                            IconLeftInfoWidget:
+                                                id: li_icon_1
+                                                icon: 'cash-multiple'
+                                                
+                                    Toolbar:
+                                        md_bg_color: get_color_from_hex('#222222')
+                                        background_palette: 'BlueGrey'
+                                        background_hue: 'A400'
+                                        font_style: 'Body1'
+                                        theme_text_color: 'Primary'
+                                        title: 'Network status'
+                                    
+                                    MDList:                                                         
+                                        OneLineIconListItem:
+                                            text: 'Blockheight: ' + app.network_manager.blockcount
+                                            IconLeftInfoWidget:
+                                                id: li_icon_2
+                                                icon: 'stairs'
+
+                                        OneLineIconListItem:
+                                            text: 'Peers: ' + app.network_manager.connections
+                                            IconLeftInfoWidget:
+                                                text_color: get_color_from_hex(app.network_manager.connectioncolor)
+                                                theme_text_color: 'Custom'
+                                                id: li_icon_3
+                                                icon: 'access-point-network'                                                                            
+                
+                                        OneLineIconListItem:
+                                            text: 'Network difficulty: ' + app.network_manager.networkdiff
+                                            IconLeftInfoWidget:
+                                            
+                                                id: li_icon_3
+                                                icon: 'chart-timeline'                                                                            
+                                          
+                                    MDLabel:
+                                        theme_text_color: 'Primary'
+                                        font_style: 'Body1'
+                                        text: ''
+                                                                                     
+                        MDTab:
+                            name: 'transactions'
+                            text: 'Transaction overview'
+                            icon: 'bank'
+                            ScrollView:
+                                do_scroll_x: False
+
+                                BoxLayout:              
+                                    size_hint_y: None
+                                    height: dp(600)           
+                                    orientation: 'vertical'  
+                                    Toolbar:
+                                        md_bg_color: get_color_from_hex('#222222')
+                                        background_palette: 'BlueGrey'
+                                        background_hue: 'A400'
+                                        font_style: 'Body1'
+                                        theme_text_color: 'Primary'
+                                        title: 'Recent transactions'
+                                                                          
+                                    MDList:
+                                        
+                                        OneLineIconListItem:
+                                            opposite_colors: True
+                                            text:app.transaction_manager.transactionlist[0][0]
+                                            
+                                            IconLeftInfoWidget:
+                                                id: li_icon_1
+                                                icon:app.transaction_manager.transactionlist[0][1]
+                                                text_color: get_color_from_hex(app.transaction_manager.transactionlist[0][2])
+                                                theme_text_color: 'Custom'
+
+                                        OneLineIconListItem:
+                                            opposite_colors: True
+                                            text:app.transaction_manager.transactionlist[1][0]
+                                            
+                                            IconLeftInfoWidget:
+                                                id: li_icon_1
+                                                icon:app.transaction_manager.transactionlist[1][1]
+                                                text_color: get_color_from_hex(app.transaction_manager.transactionlist[1][2])
+                                                theme_text_color: 'Custom'
+                                                
+                                        OneLineIconListItem:
+                                            opposite_colors: True
+                                            text:app.transaction_manager.transactionlist[2][0]
+                                            
+                                            IconLeftInfoWidget:
+                                                id: li_icon_1
+                                                icon:app.transaction_manager.transactionlist[2][1]
+                                                text_color: get_color_from_hex(app.transaction_manager.transactionlist[2][2])
+                                                theme_text_color: 'Custom'
+
+                                        OneLineIconListItem:
+                                            opposite_colors: True
+                                            text:app.transaction_manager.transactionlist[3][0]
+                                            
+                                            IconLeftInfoWidget:
+                                                id: li_icon_1
+                                                icon:app.transaction_manager.transactionlist[3][1]
+                                                text_color: get_color_from_hex(app.transaction_manager.transactionlist[3][2])
+                                                theme_text_color: 'Custom'
+                                                
+                                        OneLineIconListItem:
+                                            opposite_colors: True
+                                            text:app.transaction_manager.transactionlist[4][0]
+                                            
+                                            IconLeftInfoWidget:
+                                                id: li_icon_1
+                                                icon:app.transaction_manager.transactionlist[4][1]
+                                                text_color: get_color_from_hex(app.transaction_manager.transactionlist[4][2])
+                                                theme_text_color: 'Custom'
+                                                
+                                        OneLineIconListItem:
+                                            opposite_colors: True
+                                            text:app.transaction_manager.transactionlist[5][0]
+                                            
+                                            IconLeftInfoWidget:
+                                                id: li_icon_1
+                                                icon:app.transaction_manager.transactionlist[5][1]
+                                                text_color: get_color_from_hex(app.transaction_manager.transactionlist[5][2])
+                                                theme_text_color: 'Custom'
+                                                
+                                        OneLineIconListItem:
+                                            opposite_colors: True
+                                            text:app.transaction_manager.transactionlist[6][0]
+                                            
+                                            IconLeftInfoWidget:
+                                                id: li_icon_1
+                                                icon:app.transaction_manager.transactionlist[6][1]
+                                                text_color: get_color_from_hex(app.transaction_manager.transactionlist[6][2])
+                                                theme_text_color: 'Custom'
+                                                
+                                        OneLineIconListItem:
+                                            opposite_colors: True
+                                            text:app.transaction_manager.transactionlist[7][0]
+                                            
+                                            IconLeftInfoWidget:
+                                                id: li_icon_1
+                                                icon:app.transaction_manager.transactionlist[7][1]
+                                                text_color: get_color_from_hex(app.transaction_manager.transactionlist[7][2])
+                                                theme_text_color: 'Custom'                                                             
+                                                                                                                                                                                                                                                         
+                                    MDLabel:
+                                        theme_text_color: 'Primary'
+                                        font_style: 'Body1'
+                                        text: ''
+                                
+                        MDTab:
+                            name: 'send'
+                            text: 'Send VLU'
+                            icon: 'send'
+                            ScrollView:
+                                do_scroll_x: False
+
+                                BoxLayout:
+                                    size_hint_y: None
+                                    height: dp(600)           
+                                    orientation: 'vertical'  
+                                    Toolbar:
+                                        md_bg_color: get_color_from_hex('#222222')
+                                        background_palette: 'BlueGrey'
+                                        background_hue: 'A400'
+                                        font_style: 'Body1'
+                                        
+                                        theme_text_color: 'Primary'
+                                        title: 'Send Valutos'
+                                    BoxLayout:
+                                        orientation: 'vertical'
+                                        size_hint_y: None
+                                        height: self.minimum_height - 20
+                                        
+                                        padding: dp(24)
+                                        spacing: 0
+                                        MDLabel:
+                                            text: ''
+                                            theme_text_color: 'Secondary'
+                                            font_style: 'Title'
+                                            size_hint_y: None
+                                            height: dp(15)
+                                            
+                                        MDLabel:
+                                            text: 'Where to send'
+                                            theme_text_color: 'Secondary'
+                                            font_style:'Title'
+                                            size_hint_y: None
+                                            height: dp(38)
+                                            
+                                        MDTextField:
+                                            text: app.transfer_manager.address_hint               
+                                            id: 'textaddress'
+                                            max_text_length: 34
+                                            min_text_length: 34
+                                            required: True
+                                            hint_text: 'Recipient address'
+                                            helper_text: 'Eg. VWWPdGq12BG2Ha5kDmdgqGphrt9zJTB98E'
+                                            helper_text_mode: 'persistent'
+                                            on_text: app.transfer_manager.set_address(self.text)
+                                            write_tab: False
+                                        
+                                        MDLabel:
+                                            text: ''
+                                            theme_text_color: 'Secondary'
+                                            font_style: 'Title'
+                                            size_hint_y: None
+                                            height: dp(15)
+                                        
+                                        MDLabel:
+                                            md_bg_color: get_color_from_hex('#222222')
+                                            text: 'What to send'
+                                            theme_text_color: 'Secondary'
+                                            font_style: 'Title'
+                                            size_hint_y: None
+                                            height: dp(38)
+                                        
+                                        MDTextField:
+                                            text: app.transfer_manager.amount_hint
+                                            id: 'textamount'
+                                            max_text_length: 10
+                                            required: True
+                                            hint_text: 'Amount to send'
+                                            helper_text: 'Eg. 1.00000000'
+                                            helper_text_mode: 'persistent'
+                                            on_text: app.transfer_manager.set_amount(self.text)
+                                            write_tab: False
+                                        
+                                        MDLabel:
+                                            text: ''
+                                            theme_text_color: 'Secondary'
+                                            font_style: 'Title'
+                                            size_hint_y: None
+                                            height: dp(15)
+                                                                                
+                                        MDLabel:
+                                            md_bg_color: get_color_from_hex('#222222')
+                                            text: 'Wallet passphrase'
+                                            theme_text_color: 'Secondary'
+                                            font_style: 'Title'
+                                            size_hint_y: None
+                                            height: dp(38)
+                                        
+                                        MDTextField:
+                                            text: app.transfer_manager.pass_hint
+                                            id: 'textpassword'
+                                            max_text_length: 25
+                                            required: True
+                                            hint_text: 'Password'
+                                            helper_text: 'Default: ValutoPy(if wallet is unencrypted), set with encryptwallet in terminal'
+                                            helper_text_mode: 'persistent'
+                                            on_text: app.transfer_manager.set_pass(self.text)
+                                            write_tab: False
+                                                                                    
+                                        MDLabel:
+                                            text: ''
+                                            theme_text_color: 'Secondary'
+                                            font_style: 'Title'
+                                            size_hint_y: None
+                                            height: dp(32)    
+                                        
+                                        MDRaisedButton:
+                                            id: 'transferbutton'
+                                            size_hint: None, None
+                                            size: 3 * dp(44), dp(44)
+                                            text: 'Do transaction'
+                                            disabled: app.transfer_manager.button_state
+                                            on_release: app.transfer_manager.send_amount()
+                                    MDLabel:
+                                        theme_text_color: 'Primary'
+                                        font_style: 'Body1'
+                                        text: ''
+
+                        MDTab:
+                            name: 'terminal'
+                            text: 'Terminal'
+                            icon: 'terminal'
+                            BoxLayout:
+                                orientation: 'vertical'
+                                Toolbar:
+                                    md_bg_color: get_color_from_hex('#222222')
+                                    background_palette: 'BlueGrey'
+                                    background_hue: 'A400'
+                                    font_style: 'Body1'
+                                    
+                                    theme_text_color: 'Primary'
+                                    title: 'Valuto Terminal(Advanced users only)'
+                                    
+                                ScrollView:
+                                    do_scroll_x: False
+
+                                    BoxLayout:
+                                        size_hint_y: 1         
+                                        orientation: 'vertical'                                         
+                                        MDTextField:
+                                            text:app.network_manager.terminalbuffer
+                                            multiline: True
+                                            id: 'textterminalinput'
+                                            
+                                        MDTextField:
+                                            multiline: True
+                                            id: 'textterminalinput'
+                                            on_text: app.network_manager.onchangeterminal(self.text)                                                
+                                        MDLabel:
+                                            theme_text_color: 'Primary'
+                                            font_style: 'Body1'
+                                            text: ''            
+                
+                                        
+        MDSpinner:
+            id: spinnerloading
+            size_hint: None, None
+            size: dp(100), dp(100)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            active: app.network_manager.loadingstate
