@@ -50,7 +50,7 @@ class NetworkManager(Widget):
             inputcommand = input.split(chr(10))
             self.lastterminalcommand = inputcommand[-2]
             print 'valutod.exe ' + self.lastterminalcommand
-            output = self.commandsend_terminal('valutod.exe ' + self.lastterminalcommand)
+            output = self.commandsend_terminal('valutod ' + self.lastterminalcommand)
             print output
             self.terminalbuffer += output
             #except:
@@ -79,10 +79,10 @@ class NetworkManager(Widget):
         if platform.system() == "Linux":
             self.valutod = subprocess.Popen('./valutod')    
         else:
-            self.valutod = subprocess.Popen('valutod.exe', shell=True)            
+            self.valutod = subprocess.Popen('valutod', shell=True)            
             
             while True:
-                checkifrunning = subprocess.call('valutod.exe getinfo', shell=True)
+                checkifrunning = subprocess.call('valutod getinfo', shell=True)
                 if checkifrunning == 0:
                     print 'Valutod started'
                     break
